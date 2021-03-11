@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "_Master";
+}
+
+<input id="firstName" type="text" placeholder="Имя" />
+<input id="lastName" type="text" placeholder="Фамилия" />
+<button id="create">Create diagram</button>
+
+<div class="table" style="display: none;">
+    <table>
+        <thead>
+            <tr>
+                <th>Имя Фамилия</th>
+                <th>POL</th>
+                <th>CHL</th>
+                <th>UPR</th>
+                <th>Качество</th>
+            </tr>
+        </thead>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
+<div id="chart-container">
+    <canvas id="chart1"></canvas>
+</div>
+<script>
+    var ctx = $('#chart1')[0].getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            datasets: [{
+                backgroundColor: 'rgb(255, 99, 132)',
+                label: ''
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scale: {
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 1.2
+                }
+            },
+            legend: {
+                display: false
+            }
+        }
+    });
+
+    function refreshRadar(response, labels) {
+        if (!$('#chart-container').is('visible'))
+            $('#chart-container').show();
+        chart.data.labels = labels;
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data = response.data;
+        });
+        chart.update();
+    }
+
+    function createTable(response) {
+        const firstName = $('#firstName').val();
+        const lastName = $('#lastName').val();
+        $('.table').show();
+        $('.table tbody tr td:first').append(firstName + ' ' + lastName);
+        $('.table tbody tr:first').append('<td>' + Math.round(response.data[0] * 10000) / 10000 + '</td>');
+        $('.table tbody tr:first').append('<td>' + Math.round(response.data[1] * 10000) / 10000 + '</td>');
+        $('.table tbody tr:first').append('<td>' + Math.round(response.data[2] * 10000) / 10000 + '</td>');
+        $('.table tbody tr:first').append('<td>' + Math.round(response.quaility * 10000) / 10000 + '</td>');
+    }
+
+    function fillTable(response) {
+        if (!$('.table').is(':visible')) {
+            createTable(response);
+        }
+        else {
+            $('.table tbody tr > td:nth-child(1)').html($('#firstName').val() + ' ' + $('#lastName').val());
+            $('.table tbody tr > td:nth-child(2)').html(Math.round(response.data[0] * 10000) / 10000);
+            $('.table tbody tr > td:nth-child(3)').html(Math.round(response.data[1] * 10000) / 10000);
+            $('.table tbody tr > td:nth-child(4)').html(Math.round(response.data[2] * 10000) / 10000);
+            $('.table tbody tr > td:nth-child(5)').html(Math.round(response.quaility * 10000) / 10000);
+        }
+    }
+
+    $('#create').click(function () {
+        $.ajax({
+            async: true,
+            type: 'GET',
+            url: '/diagram/getData',
+            data: { firstName: $('#firstName').val(), lastName: $('#lastName').val() },
+            success: function (response) {
+                refreshRadar(response, ['POL', 'CHL', 'UPR']);
+                fillTable(response);
+            },
+            statusCode: {
+                404: function () {
+                    alert('Студент не найдено');
+                }
+            }
+        });
+    });
+</script>

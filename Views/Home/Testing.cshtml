@@ -1,0 +1,50 @@
+﻿@using TestingSystem.Models;
+@{
+    Layout = "_Master";
+}
+@model List<Question>
+
+<div>
+    <input type="text" id="firstName" />
+    <input type="text" id="lastName" />
+</div>
+@for (int i = 0; i < Model.Count; i++)
+{
+    <div class="block">
+        <div>
+            <h3 q-id="@Model[i].Id" class="q-info">@Model[i].Text</h3>
+        </div>
+        <div>
+            <input type="text" placeholder="Ответ" />
+        </div>
+    </div>
+}
+<button id="submit-btn">Закончить тестирование</button>
+
+<script>
+    $('#submit-btn').click(function () {
+        console.log('clicked');
+        var obj = { firstName: $('#firstName').val().trim(), lastName: $('#lastName').val().trim() };
+        var data = [];
+        var id = '';
+        var input_data = '';
+        $('.block').each(function () {
+            id = $(this).find('.q-info').attr('q-id');
+            input_data = $(this).find('input').val();
+            data.push({ questionId: id, answer: input_data });
+        });
+        obj.StudentAnswers = data;
+        $.ajax({
+            async: false,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(obj),
+            dataType: "json",
+            url: "/Home/FinishTesting",
+            success: function (response) {
+                window.location.href = response.link;
+            }
+        })
+
+    });
+</script>

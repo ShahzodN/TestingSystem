@@ -12,7 +12,7 @@ namespace TestingSystem.Models
         public int? QuestionId { get; set; }
         public DateTime Date { get; set; }
         public short Point { get; set; }
-
+        public string Answer { get; set; }
         public virtual Question Question { get; set; }
         public virtual Student Student { get; set; }
     }

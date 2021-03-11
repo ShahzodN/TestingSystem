@@ -1,0 +1,13 @@
+﻿#chart-container{
+    width: 300px;
+    height: 300px;
+    display: none;
+}
+
+.table > table, th, td{
+    border: 1px solid black;
+}
+
+.table > table{
+    border-collapse: collapse;
+}

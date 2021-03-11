@@ -88,6 +88,8 @@ namespace TestingSystem.Data
                 entity.Property(e => e.QuestionId).HasColumnName("question_id");
 
                 entity.Property(e => e.StudentId).HasColumnName("student_id");
+                
+                entity.Property(e => e.Answer).HasMaxLength(100).HasColumnName("answer");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.StudentAnswers)
