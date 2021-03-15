@@ -1,0 +1,26 @@
+﻿@using TestingSystem.Models
+@{
+    Layout = "_Master";
+}
+@model List<Course>
+
+<form asp-action="GetRandomData" asp-controller="Diagram" method="get">
+    <input id="firstName" name="firstName" type="text" placeholder="Имя" />
+    <input id="lastName" name="lastName" type="text" placeholder="Фамилия" />
+
+    <select name="courseId">
+        @for (int i = -1; i < Model.Count; i++)
+        {
+            if (i == -1)
+            {
+                <option value="-1">Выберите предмет</option>
+            }
+            else
+            {
+                <option value="@Model[i].Id">@Model[i].ShortName</option>
+            }
+        }
+    </select>
+    <input id="create" type="submit" value="Create diagram" />
+</form>
+    

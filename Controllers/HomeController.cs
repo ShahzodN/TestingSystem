@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +13,28 @@ namespace TestingSystem.Controllers
     public class HomeController : Controller
     {
         private readonly DataContext db;
+        private List<Course> Courses { get; set; }
 
         public HomeController(DataContext _db)
         {
             db = _db;
+            Courses = db.Courses.ToList();
         }
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult StartTesting()
+        public async Task<IActionResult> SelectCourse()
         {
-            List<Question> questions = GetRandomQuestions();
+            return View(Courses);
+        }
+
+        public IActionResult StartTesting(int courseId)
+        {
+            List<Question> questions = GetRandomQuestions(courseId).Result;
+            if (questions is null)
+                throw new NullReferenceException();
             return View("Testing", questions);
         }
         [HttpPost]
@@ -49,31 +59,38 @@ namespace TestingSystem.Controllers
             db.SaveChanges();
             return Json(new { Link = Url.ActionLink("Index", "Home") });
         }
-        private List<Question> GetRandomQuestions()
+        private async Task<List<Question>> GetRandomQuestions(int courseId)
         {
             List<Question> questions = new List<Question>();
+            List<Question> questionsFromDatabase = await db.Questions
+                                                           .Include(q => q.Chapter)
+                                                           .ThenInclude(c => c.Course)
+                                                           .Where(q => q.Chapter.Course.Id == courseId).ToListAsync();
+            if (questionsFromDatabase.Count == 0)
+                return null;
             Random rnd = new Random();
+            Question rndQuestion;
             int max = db.Questions.Count();
             int skip = rnd.Next(1, max);
             while (questions.Count < 3)
             {
-                var row = db.Questions.Skip(skip).Take(1).First();
-                if (row.ques_type == ques_type.POL && !questions.Contains(row))
-                    questions.Add(row);
+                rndQuestion = questionsFromDatabase.Skip(skip).Take(1).First();
+                if (rndQuestion.ques_type == ques_type.POL && !questions.Contains(rndQuestion))
+                    questions.Add(rndQuestion);
                 skip = rnd.Next(1, max);
             }
             while (questions.Count < 6)
             {
-                var row = db.Questions.Skip(skip).Take(1).First();
-                if (row.ques_type == ques_type.CHL && !questions.Contains(row))
-                    questions.Add(row);
+                rndQuestion = questionsFromDatabase.Skip(skip).Take(1).First();
+                if (rndQuestion.ques_type == ques_type.CHL && !questions.Contains(rndQuestion))
+                    questions.Add(rndQuestion);
                 skip = rnd.Next(1, max);
             }
             while (questions.Count < 8)
             {
-                var row = db.Questions.Skip(skip).Take(1).First();
-                if (row.ques_type == ques_type.UPR && !questions.Contains(row))
-                    questions.Add(row);
+                rndQuestion = questionsFromDatabase.Skip(skip).Take(1).First();
+                if (rndQuestion.ques_type == ques_type.UPR && !questions.Contains(rndQuestion))
+                    questions.Add(rndQuestion);
                 skip = rnd.Next(1, max);
             }
             return questions;
