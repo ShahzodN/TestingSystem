@@ -25,8 +25,6 @@ namespace TestingSystem.Data
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StudentAnswer> StudentAnswers { get; set; }
-        public virtual DbSet<Course> Courses { get; set; }
-        public virtual DbSet<Chapter> Chapters { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,18 +52,10 @@ namespace TestingSystem.Data
 
                 entity.Property(e => e.Difficulty).HasColumnName("difficulty");
 
-                entity.Property(p => p.ChapterId)
-                    .HasColumnName("chapter_id"); 
-
                 entity.Property(e => e.Text)
                     .IsRequired()
                     .HasColumnType("character varying")
                     .HasColumnName("text");
-
-                entity.HasOne(d => d.Chapter)
-                    .WithMany(p => p.Questions)
-                    .HasForeignKey(p => p.ChapterId)
-                    .HasConstraintName("questions_chapter_id_fkey");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -98,7 +88,7 @@ namespace TestingSystem.Data
                 entity.Property(e => e.QuestionId).HasColumnName("question_id");
 
                 entity.Property(e => e.StudentId).HasColumnName("student_id");
-
+                
                 entity.Property(e => e.Answer).HasMaxLength(100).HasColumnName("answer");
 
                 entity.HasOne(d => d.Question)
@@ -110,41 +100,6 @@ namespace TestingSystem.Data
                     .WithMany(p => p.StudentAnswers)
                     .HasForeignKey(d => d.StudentId)
                     .HasConstraintName("student_answers_student_id_fkey");
-            });
-
-            modelBuilder.Entity<Course>(entity =>
-            {
-                entity.ToTable("courses");
-
-                entity.Property(p => p.Id).HasColumnName("id");
-
-                entity.Property(p => p.FullName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnName("full_name");
-
-                entity.Property(p => p.ShortName)
-                    .HasMaxLength(20)
-                    .HasColumnName("short_name");
-
-                entity.Property(p => p.ChaptersCount).HasColumnName("chapters_count");
-            });
-
-            modelBuilder.Entity<Chapter>(entity =>
-            {
-                entity.ToTable("chapters");
-
-                entity.Property(p => p.Id).HasColumnName("id");
-
-                entity.Property(p => p.Name)
-                    .IsRequired()
-                    .HasMaxLength(150)
-                    .HasColumnName("name");
-
-                entity.HasOne(d => d.Course)
-                    .WithMany(p => p.Chapters)
-                    .HasForeignKey(d => d.CourseId)
-                    .HasConstraintName("chapters_course_id_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);
