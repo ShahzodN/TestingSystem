@@ -1,7 +1,14 @@
-﻿*{
+﻿@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700;900&display=swap');
+
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body{
+    font-family: Consolas;
+    font-size: 20px;
 }
 
 #chart-container{
@@ -20,6 +27,7 @@
 
 .table{
     display: none;
+    padding: 5px 20px;
 }
 
 .table td, .table th{
@@ -30,7 +38,6 @@
 #container1{
     display: flex;
     flex-direction: row;
-    border: solid red;
     padding: 30px;
     width: 100%
 }
@@ -76,4 +83,75 @@ svg{
 
 #hints p{
     font-size: 20px;
+}
+
+.block{
+    padding: 10px;
+}
+
+.testing-container1{
+    padding: 15px;
+}
+
+#submit-btn{
+    margin-left: 10px;
+}
+
+#container2{
+    width: 900px;
+    height: 600px;
+}
+.list-container{
+    padding: 25px;
+}
+
+.link-btn{
+    background-color: black;
+    padding: 0.5em 1em;
+    color: white;
+    font-size: 20px;
+    font-family: Consolas;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    font-family: Consolas;
+    font-size: 20px;
+    color: rgb(32, 139, 171);
+}
+
+a:hover:not(.link-btn){
+    text-decoration: underline
+}
+
+ul{
+    list-style-type: none;
+}
+
+input[type=text], select{
+    height: 25px;
+    font-size: 18px;
+    font-family: inherit;
+    padding: 0 3px;
+    outline: none;
+}
+
+.button{
+    background-color: black;
+    color: white;
+    padding: 0.3em 1.2em;
+    font-family: inherit;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.block label{
+    font-size: 18px;
+    padding: 10px 0px;
+}
+
+h3{
+    vertical-align: middle;
 }

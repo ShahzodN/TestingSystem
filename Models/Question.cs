@@ -15,7 +15,10 @@ namespace TestingSystem.Models
         public int Id { get; set; }
         public string Text { get; set; }
         public string Answer { get; set; }
-        public short Difficulty { get; set; }
+		public string Variant1 { get; set; }
+        public string Variant2 { get; set; }
+        public string Variant3 { get; set; }
+        public double Difficulty { get; set; }
         public ques_type ques_type { get; set; }
         public virtual ICollection<StudentAnswer> StudentAnswers { get; set; }
         public virtual Chapter Chapter { get; set; }

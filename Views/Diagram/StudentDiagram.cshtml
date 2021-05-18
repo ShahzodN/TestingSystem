@@ -1,0 +1,183 @@
+﻿@model List<Course>
+
+<div style="padding: 20px;">
+	<input id="firstName" type="text" placeholder="Имя" />
+	<input id="lastName" type="text" placeholder="Фамилия" />
+	<input type="text" placeholder="Номер группы" id="number" />
+	<select>
+		@for (int i = -1; i < Model.Count; i++)
+		{
+			if (i == -1)
+			{
+				<option value="-1">Выберите предмет</option>
+			}
+			else
+			{
+				<option value="@Model[i].Id">@Model[i].ShortName</option>
+			}
+		}
+	</select>
+	<button id="create" class="button">Построить диаграмму</button>
+</div>
+
+<div class="table" style="display: none;">
+	<table>
+		<thead>
+			<tr>
+			</tr>
+			<tr>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+<script>
+	var charts = [];
+
+	function drawLines(chartsCount) {
+		var leftContainer = $('#left-container');
+		var chartHeight = $('#chart0').parent().height();
+		var step = chartHeight / 2;
+		for (var i = 0; i < chartsCount; i++) {
+			const line = $(document.createElementNS("http://www.w3.org/2000/svg", "line")).attr({
+				x1: 0,
+				y1: leftContainer.height() / 2,
+				x2: $('#center-container').width(),
+				y2: step,
+				style: 'stroke: black;stroke-width: 1;'
+			});
+			$('#center-container svg').append(line);
+			step += chartHeight + (60 / (chartsCount - 1));
+		}
+	}
+
+	function destroyCharts() {
+		for (var i = 0; i < charts.length; i++) {
+			charts[i].destroy();
+		}
+		charts = [];
+	}
+
+	function createCanvas(count) {
+		const container = $('#container1');
+		if (container !== undefined) {
+			container.remove();
+		}
+		$('.table').after('<div id="container1"></div>');
+		$('#container1').append('<div id="left-container"></div>');
+		$('#left-container').append('<div class="chart-container"><canvas id="chart' + (count) + '"></canvas></div>');
+		$('#container1').append('<div id="center-container"></div>');
+		$('#center-container').append('<svg></svg>');
+		$('#container1').append('<div id="right-container"></div>');
+		for (var i = 0; i < count; i++) {
+			$('#right-container').append('<div class="chart-container"><canvas id="chart' + i + '"></canvas></div>');
+		}
+		$('#container1').height($('.chart-container').height() * count + 60);
+		$('#center-container').width($('#container1').width() - 2 * $('#left-container').width());
+	}
+
+	function createCharts(count, matrix) {
+		createCanvas(count);
+		destroyCharts();
+		for (var i = 0; i < count + 1; i++) {
+			if (matrix[i][3] < 0.3)
+				var color = 'rgb(30, 204, 24)';
+			else if (matrix[i][3] >= 0.3 && matrix[i][3] < 0.5)
+				var color = 'rgb(197, 232, 39)';
+			else if (matrix[i][3] >= 0.5 && matrix[i][3] < 0.6)
+				var color = 'rgb(240, 117, 24)';
+			else
+				var color = 'rgb(240, 24, 24)';
+
+			let chart = new Chart($('#chart' + i)[0].getContext('2d'), {
+				type: 'radar',
+				data: {
+					labels: ['UPR', 'CHL', 'POL'],
+					datasets: [{
+						backgroundColor: color,
+						data: [matrix[i][0], matrix[i][1], matrix[i][2]]
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+					scale: {
+						ticks: {
+							suggestedMin: 0,
+							suggestedMax: 1.2,
+							stepSize: 0.1
+						}
+					},
+					legend: {
+						display: false
+					},
+					title: {
+						display: true,
+						text: '1.' + (i + 1),
+						fontSize: 14
+					}
+				}
+			});
+			charts.push(chart);
+		}
+		charts[count].options.title.text = 'Успех студента';
+		drawLines(count);
+	}
+
+	function createTable(response) {
+		const firstName = $('#firstName').val();
+		const lastName = $('#lastName').val();
+		if (!$('.table').is(':visible')) {
+			$('.table').show();
+		}
+		$('.table thead tr').empty();
+		for (let i = 0; i < response.chaptersCount + 2; i++) {
+			if (i == 0) {
+				$('.table thead > tr:first-child()').append('<th></th>');
+				$('.table thead > tr:nth-child(2)').append('<th>Имя фамилия</th>');
+			}
+			else {
+				if (i === response.chaptersCount + 1) {
+					$('.table thead > tr:nth-child(1)').append(`<th colspan=4>1.0</th>`);
+					$('.table thead > tr:nth-child(2)').append('<th>UPR</th><th>CHL</th><th>POL</th><th>Качество</th>');
+					break;
+				}
+				$('.table thead > tr:nth-child(1)').append(`<th colspan=4>1.${i}</th>`);
+				$('.table thead > tr:nth-child(2)').append('<th>UPR</th><th>CHL</th><th>POL</th><th>Качество</th>');
+			}
+		}
+		$('.table table tbody').empty();
+		$('.table tbody').append('<tr></tr>');
+		for (let i = -1; i < response.chaptersCount + 1; i++) {
+			if (i == -1)
+				$('.table tbody > tr').append(`<td>${firstName} ${lastName}</td>`);
+			else {
+				$('.table tbody > tr').append(`<td>${Math.round(response.matrix[i][0] * 1000) / 1000}</td>`);
+				$('.table tbody > tr').append(`<td>${Math.round(response.matrix[i][1] * 1000) / 1000}</td>`);
+				$('.table tbody > tr').append(`<td>${Math.round(response.matrix[i][2] * 1000) / 1000}</td>`);
+				$('.table tbody > tr').append(`<td>${Math.round(response.matrix[i][3] * 1000) / 1000}</td>`);
+			}
+		}
+		createCanvas(response.chaptersCount);
+	}
+
+	$('#create').click(function () {
+		if ($('select').val() != -1) {
+			$.ajax({
+				async: true,
+				type: 'GET',
+				url: '/diagram/getStudentData',
+				data: { firstName: $('#firstName').val(), lastName: $('#lastName').val(), courseId: $('select').val(), groupNumber: $('#number').val().trim() },
+				success: function (response) {
+					console.log(response);
+					createTable(response);
+					createCharts(response.chaptersCount, response.matrix);
+				},
+				error: function (jqXHR, ajaxOptions, message) {
+					if (jqXHR.status === 404)
+						alert(jqXHR.responseJSON.message);
+				}
+			});
+		}
+	});
+</script>

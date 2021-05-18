@@ -11,9 +11,9 @@ namespace TestingSystem.ViewModels
         public CreateDiagramViewModel()
         {
             Courses = new List<Course>();
+            Chapters = new List<Chapter>();
         }
-        public int ChaptersCount { get; set; }
-        public double[,] Matrix { get; set; }
-        public List<Course> Courses { get; set; }
+		public List<Chapter> Chapters { get; set; }
+		public List<Course> Courses { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace TestingSystem.ViewModels
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Number { get; set; }
         public List<StudentAnswer> StudentAnswers { get; set; }
     }
 }

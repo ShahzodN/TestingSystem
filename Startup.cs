@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TestingSystem.Data;
+using MathNet.Numerics.Statistics;
+using MathNet.Numerics.Distributions;
 
 namespace TestingSystem
 {

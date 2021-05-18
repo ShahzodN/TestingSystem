@@ -27,6 +27,8 @@ namespace TestingSystem.Data
         public virtual DbSet<StudentAnswer> StudentAnswers { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Chapter> Chapters { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Laplace> LaplaceValues { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,6 +53,12 @@ namespace TestingSystem.Data
                     .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnName("answer");
+
+                entity.Property(e => e.Variant1).HasColumnName("variant1");
+                
+                entity.Property(e => e.Variant2).HasColumnName("variant2");
+                
+                entity.Property(e => e.Variant3).HasColumnName("variant3");
 
                 entity.Property(e => e.Difficulty).HasColumnName("difficulty");
 
@@ -79,10 +87,19 @@ namespace TestingSystem.Data
                     .HasMaxLength(50)
                     .HasColumnName("first_name");
 
+                entity.Property(p => p.GroupId)
+                    .IsRequired()
+                    .HasColumnName("group_id");
+
                 entity.Property(e => e.LastName)
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("last_name");
+
+                entity.HasOne(p => p.Group)
+                    .WithMany(p => p.Students)
+                    .HasForeignKey(p => p.GroupId)
+                    .HasConstraintName("student_group_id_fkey");
             });
 
             modelBuilder.Entity<StudentAnswer>(entity =>
@@ -141,10 +158,33 @@ namespace TestingSystem.Data
                     .HasMaxLength(150)
                     .HasColumnName("name");
 
+                entity.Property(p => p.CourseId)
+                    .HasColumnName("course_id");
+
                 entity.HasOne(d => d.Course)
                     .WithMany(p => p.Chapters)
                     .HasForeignKey(d => d.CourseId)
                     .HasConstraintName("chapters_course_id_fkey");
+            });
+
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.ToTable("groups");
+
+                entity.Property(p => p.Id)
+                    .HasColumnName("id");
+
+                entity.Property(p => p.Number)
+                    .IsRequired()
+                    .HasColumnName("number");
+            });
+
+            modelBuilder.Entity<Laplace>(entity =>
+            {
+                entity.ToTable("laplace");
+                entity.Property(l => l.Id).HasColumnName("id");
+                entity.Property(l => l.X).HasColumnName("x");
+                entity.Property(l => l.Value).HasColumnName("value");
             });
 
             OnModelCreatingPartial(modelBuilder);

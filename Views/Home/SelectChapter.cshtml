@@ -1,0 +1,14 @@
+﻿@model List<Chapter>
+
+<div style="display: flex; justify-content: center;"><h1>Доступные курсы</h1></div>
+
+<ul>
+	@for (int i = 0; i < Model.Count; i++)
+	{
+		<li><a asp-action="StartTesting" asp-controller="Home" asp-route-chapterId="@Model[i].Id">Глава 1.@(i+1)</a></li>
+	}
+	@if (Model[0] is not null)
+	{
+		<li><a asp-action="StartTesting" asp-controller="Home" asp-route-courseId="@Model[0].CourseId">Все главы</a></li>
+	}
+</ul>

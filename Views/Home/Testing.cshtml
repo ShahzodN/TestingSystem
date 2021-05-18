@@ -1,50 +1,73 @@
-﻿@using TestingSystem.Models;
-@{
-    Layout = "_Master";
-}
-@model List<Question>
+﻿@model List<Question>
 
-<div>
-    <input type="text" id="firstName" />
-    <input type="text" id="lastName" />
+<div class="testing-container1">
+	<input type="text" id="firstName" placeholder="Имя" />
+	<input type="text" id="lastName" placeholder="Фамилия" />
+	<input type="text" id="number" placeholder="Номер группы" />
 </div>
 @for (int i = 0; i < Model.Count; i++)
 {
-    <div class="block">
-        <div>
-            <h3 q-id="@Model[i].Id" class="q-info">@Model[i].Text</h3>
-        </div>
-        <div>
-            <input type="text" placeholder="Ответ" />
-        </div>
-    </div>
+	<div class="block">
+		<div style="padding: 5px 0px;">
+			@{
+				string tag = string.Empty;
+				int imgNumber = 1;
+			}
+
+			@for (int j = 0; j < Model[i].Text.Length; j++)
+			{
+				imgNumber = 1;
+				if (Model[i].Text[j] == '>' && j + 1 != Model[i].Text.Length && Model[i].Text[j + 1] == '<')
+				{
+					tag += $" <img src=\"/images/{Model[i].Id}/{imgNumber++}.jpg\" alt=\"\"> ";
+					j += 2;
+				}
+				else
+					tag += Model[i].Text[j];
+			}
+			<h3 q-id="@Model[i].Id" class="q-info">@Html.Raw(tag)</h3>
+		</div>
+		<div>
+			<label><input type="radio" name=@($"radio{i}") value="@Model[i].Variant1" /> @Model[i].Variant1</label><br />
+			<label><input type="radio" name=@($"radio{i}") value="@Model[i].Variant2" /> @Model[i].Variant2</label><br />
+			<label><input type="radio" name=@($"radio{i}") value="@Model[i].Variant3" /> @Model[i].Variant3</label>
+		</div>
+	</div>
 }
-<button id="submit-btn">Закончить тестирование</button>
+<button id="submit-btn" class="button">Закончить тестирование</button>
 
 <script>
-    $('#submit-btn').click(function () {
-        console.log('clicked');
-        var obj = { firstName: $('#firstName').val().trim(), lastName: $('#lastName').val().trim() };
-        var data = [];
-        var id = '';
-        var input_data = '';
-        $('.block').each(function () {
-            id = $(this).find('.q-info').attr('q-id');
-            input_data = $(this).find('input').val();
-            data.push({ questionId: id, answer: input_data });
-        });
-        obj.StudentAnswers = data;
-        $.ajax({
-            async: false,
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(obj),
-            dataType: "json",
-            url: "/Home/FinishTesting",
-            success: function (response) {
-                window.location.href = response.link;
-            }
-        })
+	$('#submit-btn').click(function () {
+		console.log('clicked');
+		var obj = { firstName: $('#firstName').val().trim(), lastName: $('#lastName').val().trim(), number: $('#number').val().trim() };
+		var data = [];
+		var id = '';
+		var input_data = '';
 
-    });
+		$('.block').each(function () {
+			id = $(this).find('.q-info').attr('q-id');
+			input_data = $(this).find('input[type=radio]:checked').val();
+			if (input_data == null || input_data == undefined)
+				input_data = '';
+			data.push({ questionId: id, answer: input_data });
+		});
+		obj.StudentAnswers = data;
+
+		if (obj.firstName != '' && obj.lastName != '' && obj.number != '') {
+			$.ajax({
+				async: false,
+				type: "POST",
+				data: JSON.stringify(obj),
+				dataType: 'json',
+				contentType: 'application/json',
+				url: "/Home/FinishTesting",
+				success: function (response) {
+					window.location.href = response.link;
+				}
+			})
+		}
+		else {
+			alert('Введите имя и фамилия');
+		}
+	});
 </script>

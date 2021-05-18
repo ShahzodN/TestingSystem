@@ -1,0 +1,197 @@
+﻿@model List<Course>
+
+<div style="padding: 20px">
+	<input type="text" id="number" placeholder="Номер группы" />
+	<select>
+		@for (int i = -1; i < Model.Count; i++)
+		{
+			if (i == -1)
+			{
+				<option value="-1">Выберите предмет</option>
+			}
+			else
+			{
+				<option value="@Model[i].Id">@Model[i].ShortName</option>
+			}
+		}
+	</select>
+	<button id="submit-btn" class="button">OK</button>
+</div>
+
+<div class="table" style="display: none;">
+	<table>
+		<thead>
+			<tr>
+			</tr>
+			<tr>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+
+<script>
+	function fillTable(response) {
+		if (!$('.table').is(':visible')) {
+			$('.table').show();
+		}
+		$('.table thead tr').empty();
+		for (var i = 0; i < response.chaptersCount + 2; i++) {
+			if (i == 0) {
+				$('.table thead > tr:first-child()').append('<th></th>');
+				$('.table thead > tr:nth-child(2)').append('<th>Имя фамилия</th>');
+			}
+			else {
+				if (i === response.chaptersCount + 1) {
+					$('.table thead > tr:nth-child(1)').append(`<th colspan=4>1.0</th>`);
+					$('.table thead > tr:nth-child(2)').append('<th>UPR</th><th>CHL</th><th>POL</th><th>Качество</th>');
+					break;
+				}
+				$('.table thead > tr:nth-child(1)').append(`<th colspan=4>1.${i}</th>`);
+				$('.table thead > tr:nth-child(2)').append('<th>UPR</th><th>CHL</th><th>POL</th><th>Качество</th>');
+			}
+		}
+		$('.table table tbody').empty();
+		var row;
+		var matrix;
+		for (var i = 0; i < response.students.length; i++) {
+			$('.table > table > tbody').append(`<tr><td>${response.students[i].firstName} ${response.students[i].lastName}</td></tr>`)
+			row = $(`.table > table > tbody > tr:nth-child(${i + 1})`);
+			matrix = response.students[i].matrix;
+			for (var j = 0; j < matrix.length; j++) {
+				row.append(`<td>${Math.round(matrix[j][0] * 1000) / 1000}</td>`);
+				row.append(`<td>${Math.round(matrix[j][1] * 1000) / 1000}</td>`);
+				row.append(`<td>${Math.round(matrix[j][2] * 1000) / 1000}</td>`);
+				row.append(`<td>${Math.round(matrix[j][3] * 1000) / 1000}</td>`);
+			}
+		}
+	}
+
+	function createCanvas(count) {
+		const container = $('#container1');
+		if (container !== undefined) {
+			container.remove();
+		}
+		$('.table').after('<div id="container1"></div>');
+		$('#container1').append('<div id="left-container"></div>');
+		$('#left-container').append('<div class="chart-container"><canvas id="chart' + (count) + '"></canvas></div>');
+		$('#container1').append('<div id="center-container"></div>');
+		$('#center-container').append('<svg></svg>');
+		$('#container1').append('<div id="right-container"></div>');
+		for (var i = 0; i < count; i++) {
+			$('#right-container').append('<div class="chart-container"><canvas id="chart' + i + '"></canvas></div>');
+		}
+		$('#container1').height($('.chart-container').height() * count + 60);
+		$('#center-container').width($('#container1').width() - 2 * $('#left-container').width());
+	}
+
+	function createCanvas2(response) {
+		var container = $('#container2');
+		if (container !== undefined) {
+			container.remove();
+		}
+		$('.table').after('<div id="container2"><canvas id="rasp-chart"></canvas></div>');
+		$('#container2').after('<div class="list-container"><ul id="list"></ul></div>');
+		$('.list-container > ul').empty();
+		var ul = $('#list');
+		ul.append(`<li>Мат. ожидание: ${Math.round(response.matOj * 1000) / 1000}</li>`);
+		ul.append(`<li>Дисперсия: ${Math.round(response.disp * 1000) / 1000}</li>`);
+		ul.append(`<li>Среднеквадратическое отклонение: ${Math.round(response.otkl * 1000) / 1000}</li>`);
+		ul.append(`<li>Хи квадрат: ${Math.round(response.x * 1000) / 1000}</li>`);
+		var pi = '';
+		response.p.forEach(function (item, index) {
+			pi += (Math.round(item * 10000) / 10000).toString();
+			if (index != 4)
+				pi += ', ';
+		});
+		ul.append(`<li>P[i]: ${pi}</li>`);
+		ul.append(`<li>n[i]: ${response.n}</li>`);
+		ul.append(`<p style="text-decoration: underline;">Гипотеза ${response.x < 6 ? 'принимается' : 'отвергается'}</p>`)
+	}
+
+	function createCharts(count, matrix) {
+		createCanvas(count);
+		destroyCharts();
+		for (var i = 0; i < count + 1; i++) {
+			let chart = new Chart($('#chart' + i)[0].getContext('2d'), {
+				type: 'radar',
+				data: {
+					labels: ['UPR', 'CHL', 'POL'],
+					datasets: [{
+						backgroundColor: 'rgb(4,124,182)',
+						data: [matrix[i][0], matrix[i][1], matrix[i][2]]
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+					scale: {
+						ticks: {
+							suggestedMin: 0,
+							suggestedMax: 1.2,
+							stepSize: 0.1
+						}
+					},
+					legend: {
+						display: false
+					},
+					title: {
+						display: true,
+						text: '1.' + (i + 1),
+						fontSize: 14
+					}
+				}
+			});
+			charts.push(chart);
+		}
+		charts[count].options.title.text = 'Успех студента';
+		drawLines(count);
+	}
+
+	function createChart2(response) {
+		createCanvas2(response);
+		let chart = new Chart($('#rasp-chart')[0].getContext('2d'), {
+			type: 'bar',
+			data: {
+				labels: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2],
+				datasets: [{
+					barPercentage: 1,
+					categoryPercentage: 1,
+					backgroundColor: 'rgb(4,124,182)',
+					data: response.n
+				}, {
+					type: 'line',
+					fill: false,
+					borderColor: 'rgba(0, 0, 0, 0)',
+					data: [0, 0, 0, 0, Math.max.apply(Math, response.n) + 2]
+				}]
+			},
+			options: {
+				maintainAspectRatio: false,
+				legend: {
+					display: false
+				}
+			}
+		});
+	}
+
+	$('#submit-btn').click(function () {
+		if ($('select').val() != -1) {
+			$.ajax({
+				async: true,
+				type: 'GET',
+				url: '/diagram/getGroupData',
+				data: { groupNumber: $('#number').val().trim(), courseId: $('select').val() },
+				success: function (response) {
+					console.log(response);
+					fillTable(response);
+					createChart2(response);
+				},
+				error: function (jqXHR, ajaxOptions, message) {
+					if (jqXHR.status === 404)
+						alert(jqXHR.responseJSON.message);
+				}
+			});
+		}
+	})
+</script>

@@ -5,77 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Jobs\jobs.json" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Stories\stories.json" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Team\people.json" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\assets\img\email.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\assets\img\logo.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\assets\img\paypal.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\assets\img\products\notebag%402x.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\assets\img\products\notejoy%402x.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\android-icon-144x144.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\android-icon-192x192.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\android-icon-36x36.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\android-icon-48x48.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\android-icon-72x72.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\android-icon-96x96.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-114x114.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-120x120.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-144x144.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-152x152.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-180x180.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-57x57.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-60x60.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-72x72.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-76x76.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon-precomposed.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\apple-icon.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\browserconfig.xml" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\favicon-16x16.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\favicon-32x32.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\favicon-96x96.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\favicon.ico" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\favicon.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\manifest.json" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\ms-icon-144x144.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\ms-icon-150x150.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\ms-icon-310x310.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\public\icons\ms-icon-70x70.png" />
-    <Content Include="wwwroot\js\Fuse-master\docs\.vuepress\styles\grid.css" />
+    <Compile Remove="wwwroot\js\Fuse-master\**" />
+    <Content Remove="wwwroot\js\Fuse-master\**" />
+    <EmbeddedResource Remove="wwwroot\js\Fuse-master\**" />
+    <None Remove="wwwroot\js\Fuse-master\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\js\Fuse-master\.github\FUNDING.yml" />
-    <None Include="wwwroot\js\Fuse-master\.github\ISSUE_TEMPLATE\---bug-report.md" />
-    <None Include="wwwroot\js\Fuse-master\.github\ISSUE_TEMPLATE\---feature-request.md" />
-    <None Include="wwwroot\js\Fuse-master\.github\ISSUE_TEMPLATE\--support-request.md" />
-    <None Include="wwwroot\js\Fuse-master\.github\ISSUE_TEMPLATE\-docs-on-fusejs-io.md" />
-    <None Include="wwwroot\js\Fuse-master\.github\workflows\nodejs.yml" />
-    <None Include="wwwroot\js\Fuse-master\.github\workflows\stale.yml" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Demo\books.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Demo\Demo.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Donate\Donate.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Jobs\Jobs.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Stories\Stories.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\components\Team\Team.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\config.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\enhanceApp.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\nav\en.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\plugins\google-analytics\enhanceApp.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\plugins\google-analytics\index.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\styles\index.styl" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\styles\palette.styl" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\components\AdUnit.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\components\BuySellAds.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\components\CarbonAds.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\components\Donate.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\components\DonateLink.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\components\Version.vue" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\index.js" />
-    <None Include="wwwroot\js\Fuse-master\docs\.vuepress\theme\layouts\Layout.vue" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

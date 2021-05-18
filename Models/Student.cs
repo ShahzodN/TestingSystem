@@ -15,7 +15,8 @@ namespace TestingSystem.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
+        public Group Group { get; set; }
+        public int GroupId { get; set; }
         public virtual ICollection<StudentAnswer> StudentAnswers { get; set; }
     }
 }
