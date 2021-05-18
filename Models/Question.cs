@@ -20,8 +20,7 @@ namespace TestingSystem.Models
         public string Variant3 { get; set; }
         public double Difficulty { get; set; }
         public ques_type ques_type { get; set; }
+
         public virtual ICollection<StudentAnswer> StudentAnswers { get; set; }
-        public virtual Chapter Chapter { get; set; }
-        public int ChapterId { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestingSystem.Data;
 using TestingSystem.Models;
-using TestingSystem.ViewModels;
 
 namespace TestingSystem.Controllers
 {

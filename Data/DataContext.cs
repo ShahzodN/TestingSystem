@@ -62,18 +62,10 @@ namespace TestingSystem.Data
 
                 entity.Property(e => e.Difficulty).HasColumnName("difficulty");
 
-                entity.Property(p => p.ChapterId)
-                    .HasColumnName("chapter_id"); 
-
                 entity.Property(e => e.Text)
                     .IsRequired()
                     .HasColumnType("character varying")
                     .HasColumnName("text");
-
-                entity.HasOne(d => d.Chapter)
-                    .WithMany(p => p.Questions)
-                    .HasForeignKey(p => p.ChapterId)
-                    .HasConstraintName("questions_chapter_id_fkey");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -115,7 +107,7 @@ namespace TestingSystem.Data
                 entity.Property(e => e.QuestionId).HasColumnName("question_id");
 
                 entity.Property(e => e.StudentId).HasColumnName("student_id");
-
+                
                 entity.Property(e => e.Answer).HasMaxLength(100).HasColumnName("answer");
 
                 entity.HasOne(d => d.Question)
